@@ -29,7 +29,7 @@
   <artifactId>tomee-tck</artifactId>
   <name>TomEE TCK Harness</name>
 
-  <version>8.0.7-SNAPSHOT</version>
+  <version>8.0.12-SNAPSHOT</version>
 
   <description>
     TomEE TCK Harness
@@ -38,10 +38,10 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>8.0.7-SNAPSHOT</openejb.version>
-    <tomee.version>8.0.7-SNAPSHOT</tomee.version>
+    <openejb.version>8.0.12-SNAPSHOT</openejb.version>
+    <tomee.version>8.0.12-SNAPSHOT</tomee.version>
 
-    <tomcat.version>9.0.41</tomcat.version>
+    <tomcat.version>9.0.62</tomcat.version>
     <derby.version>10.14.2.0</derby.version>
 
     <!--
@@ -85,7 +85,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
-    <version.activemq>5.16.0</version.activemq>
+    <version.activemq>5.16.3</version.activemq>
     <version.gmaven-plugin>1.5</version.gmaven-plugin>
   </properties>
 
@@ -208,6 +208,16 @@
       <groupId>backport-util-concurrent</groupId>
       <artifactId>backport-util-concurrent</artifactId>
       <version>3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.4</version>
     </dependency>
 
     <dependency>

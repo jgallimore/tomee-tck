@@ -199,15 +199,8 @@ abstract class CommandSupport {
         builder.directory = openejbLib
         builder.appendAll("geronimo-*_spec-*.jar")
         builder.append("javaee-api-*.jar")
-        builder.append("servlet-api.jar")
-        builder.append("websocket-api.jar")
-        builder.append("jakarta.faces-*.jar")
-        builder.append("el-api.jar")
-        //builder.append("jakarta.annotation-api-*.jar")
-//        builder.append("jakarta.validation-api-*.jar")
-        builder.append("jakarta.xml.bind-api-*.jar")
-        builder.append("jaspic-api.jar")
-        builder.append("jsp-api.jar")
+        builder.directory = javaHome() +"/lib/"
+        builder.append("rt.jar")
         builder.getPath("openejb.jee.classes")
 
         // ts.run.classpath - used to run the appclient
@@ -242,13 +235,14 @@ abstract class CommandSupport {
         builder.append("jasper-el.jar")
         
         // for CXF JAX-RS client
-        builder.append("cxf-rt-rs-client-*.jar")
-        builder.append("cxf-rt-transports-http-*.jar")
-        builder.append("cxf-core-*.jar")
+        builder.append("cxf-shade-*.jar")
+        // builder.append("cxf-rt-rs-client-*.jar")
+        // builder.append("cxf-rt-transports-http-*.jar")
+        // builder.append("cxf-core-*.jar")
+        // builder.append("cxf-rt-frontend-jaxrs-*.jar")
         builder.append("woodstox-core-*.jar")
         builder.append("stax2-api-*.jar")
         builder.append("xmlschema-core-*.jar")
-        builder.append("cxf-rt-frontend-jaxrs-*.jar")
         builder.append("cxf-rt-rs-sse-*.jar")
 
         // for jonzon
@@ -297,6 +291,11 @@ abstract class CommandSupport {
         }
 
         builder.getPath("openejb.embedded.classpath")
+    }
+
+    private String javaHome() {
+        def file = new File(System.getProperty("java.home"))
+        return file.getAbsolutePath();
     }
 
     def selectTests() {
