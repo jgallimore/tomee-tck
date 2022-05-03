@@ -29,7 +29,7 @@
   <artifactId>tomee-tck</artifactId>
   <name>TomEE TCK Harness</name>
 
-  <version>8.0.7-SNAPSHOT</version>
+  <version>9.0.0-M8-SNAPSHOT</version>
 
   <description>
     TomEE TCK Harness
@@ -39,17 +39,14 @@
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
 
-    <!-- A bit tricky because of the nature we create the 9.x version. Even if the zip is
-    upgraded to 9.x, lib jars are still in the same old package and still using the base version
-    For example, for 9.0.0-M2, we are using 8.0.4 as a base line, so it must be aligned -->
-    <openejb.inzip.version>8.0.7</openejb.inzip.version>
-    <tomee.inzip.version>8.0.7</tomee.inzip.version>
+    <openejb.inzip.version>9.0.0-M8-SNAPSHOT</openejb.inzip.version>
+    <tomee.inzip.version>9.0.0-M8-SNAPSHOT</tomee.inzip.version>
     <tomee.zip.groupId>org.apache.tomee</tomee.zip.groupId>
-    <tomee.zip.version>9.0.0-M7</tomee.zip.version>
+    <tomee.zip.version>9.0.0-M8-SNAPSHOT</tomee.zip.version>
 
-    <tomcat.version>10.0.4</tomcat.version>
+    <tomcat.version>10.0.20</tomcat.version>
 
-    <johnzon.version>1.2.9</johnzon.version>
+    <johnzon.version>1.2.16</johnzon.version>
     <derby.version>10.14.2.0</derby.version>
 
     <!--
@@ -237,6 +234,17 @@
       <groupId>backport-util-concurrent</groupId>
       <artifactId>backport-util-concurrent</artifactId>
       <version>3.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.4</version>
     </dependency>
 
     <dependency>
@@ -1081,7 +1089,7 @@
     <repository>
       <id>apache-m2-snapshot</id>
       <name>Apache M2 Snapshot Repository</name>
-      <url>http://repository.apache.org/snapshots/</url>
+      <url>https://repository.apache.org/snapshots/</url>
       <releases>
         <enabled>false</enabled>
       </releases>
