@@ -198,8 +198,9 @@ abstract class CommandSupport {
         builder = new PathBuilder(this)
         builder.directory = openejbLib
         builder.append("el-api.jar")
-        builder.append("jakarta.mail*.jar")
-        builder.append("jakarta.activation-*.jar")
+        builder.append("geronimo-mail_2.1_spec*.jar")
+        builder.append("geronimo-mail_2.1_provider*.jar")
+        // builder.append("jakarta.activation-*.jar")
         builder.append("jakartaee-api-*.jar")
 
         // only for plume
@@ -254,6 +255,8 @@ abstract class CommandSupport {
         // builder.append("cxf-core-*.jar")
         // builder.append("cxf-rt-frontend-jaxrs-*.jar")
         // builder.append("cxf-rt-rs-sse-*.jar")
+        builder.append("neethi-*.jar")
+        builder.append("wsdl4j-*.jar")
         builder.append("woodstox-core-*.jar")
         builder.append("stax2-api-*.jar")
         builder.append("xmlschema-core-*.jar")
@@ -268,9 +271,9 @@ abstract class CommandSupport {
         // ts.harness.classpath
         builder = new PathBuilder(this)
         builder.reference('ts.run.classpath')
-        builder.directory = "$javaeetckHome/lib"
-        builder.append("apiCheck.jar")
-        builder.append("sigtest.jar")
+        // builder.directory = "$javaeetckHome/lib"
+        // builder.append("apiCheck.jar")
+        // builder.append("sigtest.jar")
         builder.directory = "$javaeetckHome/tools/ant/lib"
         builder.append("ant.jar")
         builder.append("ant-launcher.jar")
