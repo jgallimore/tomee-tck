@@ -29,7 +29,7 @@
   <artifactId>tomee-tck</artifactId>
   <name>TomEE TCK Harness</name>
 
-  <version>8.0.12-SNAPSHOT</version>
+  <version>8.0.13-SNAPSHOT</version>
 
   <description>
     TomEE TCK Harness
@@ -38,10 +38,10 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>8.0.12-SNAPSHOT</openejb.version>
-    <tomee.version>8.0.12-SNAPSHOT</tomee.version>
+    <openejb.version>8.0.13-SNAPSHOT</openejb.version>
+    <tomee.version>8.0.13-SNAPSHOT</tomee.version>
 
-    <tomcat.version>9.0.62</tomcat.version>
+    <tomcat.version>9.0.63</tomcat.version>
     <derby.version>10.14.2.0</derby.version>
 
     <!--
@@ -133,12 +133,12 @@
     <dependency>
       <groupId>com.icegreen</groupId>
       <artifactId>greenmail-standalone</artifactId>
-      <version>1.5.10</version>
+      <version>1.6.9</version>
     </dependency>
     <dependency>
       <groupId>com.unboundid</groupId>
       <artifactId>unboundid-ldapsdk</artifactId>
-      <version>5.1.0</version>
+      <version>6.0.4</version>
     </dependency>
 
     <!--<dependency>-->
@@ -209,6 +209,7 @@
       <artifactId>backport-util-concurrent</artifactId>
       <version>3.1</version>
     </dependency>
+
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -336,6 +337,7 @@
       <version>2.6</version>
     </dependency>
     -->
+
   </dependencies>
 
   <profiles>
@@ -553,7 +555,7 @@
           <plugin> <!-- not used by tomee yet -->
             <groupId>org.codehaus.gmaven</groupId>
             <artifactId>gmaven-plugin</artifactId>
-            <version>1.5</version>
+            <version>${version.gmaven-plugin}</version>
             <executions>
               <execution>
                 <id>generate-reverse-tests</id>
@@ -661,7 +663,7 @@
         <plugin>
           <groupId>org.codehaus.gmaven</groupId>
           <artifactId>gmaven-plugin</artifactId>
-          <version>1.5</version>
+          <version>${version.gmaven-plugin}</version>
           <configuration>
             <scriptpath>
               <element>${pom.basedir}/src/test/script</element>
@@ -943,6 +945,8 @@
 
                     <include name="eclipselink*.jar"/>
 
+                    <include name="yoko*.jar"/>
+
                   </fileset>
                 </copy>
                 <copy todir="${project.build.directory}/lib">
@@ -1053,7 +1057,7 @@
     <repository>
       <id>apache-m2-snapshot</id>
       <name>Apache M2 Snapshot Repository</name>
-      <url>http://repository.apache.org/snapshots/</url>
+      <url>https://repository.apache.org/snapshots/</url>
       <releases>
         <enabled>false</enabled>
       </releases>
