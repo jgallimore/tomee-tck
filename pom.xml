@@ -11,12 +11,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.apache.tomee.cts</groupId>
-  <artifactId>tomee-jakartaee11-tck</artifactId>
-  <version>11.0.0-SNAPSHOT</version>
+  <artifactId>tomee-jakartaee10-tck</artifactId>
+  <version>10.3.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Apache TomEE Jakarta EE TCK Harness</name>
-  <description>Jakarta EE 11 TCK harness for Apache TomEE 11 (Plume and Web Profile distributions)</description>
+  <description>Jakarta EE 10 TCK harness for Apache TomEE 10.3 (Plume and Web Profile distributions)</description>
 
   <modules>
     <module>tomee-porting</module>
@@ -35,14 +35,14 @@
     <arquillian.version>1.9.4.Final</arquillian.version>
     <junit.version>5.11.4</junit.version>
 
-    <tomee.version>11.0.0-SNAPSHOT</tomee.version>
+    <tomee.version>10.3.0</tomee.version>
     <!-- The EclipseLink-based Plume distribution is the default target under
          test; set -Dtomee.classifier=webprofile for the OpenJPA-based ZIP. -->
     <tomee.classifier>plume</tomee.classifier>
-    <tomcat.version>11.0.23</tomcat.version>
-    <openwebbeans.version>4.1.0</openwebbeans.version>
-    <johnzon.version>2.1.0</johnzon.version>
-    <cxf.version>4.2.2</cxf.version>
+    <tomcat.version>10.1.61</tomcat.version>
+    <openwebbeans.version>4.0.3</openwebbeans.version>
+    <johnzon.version>2.2.0</johnzon.version>
+    <cxf.version>4.1.9</cxf.version>
     <jakarta.tags.impl.version>3.0.1</jakarta.tags.impl.version>
     <jakarta.tags.api.version>3.0.2</jakarta.tags.api.version>
     <derby.version>10.15.2.0</derby.version>

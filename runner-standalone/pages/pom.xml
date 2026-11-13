@@ -13,7 +13,7 @@
   <parent>
     <groupId>org.apache.tomee.cts</groupId>
     <artifactId>runner-standalone</artifactId>
-    <version>11.0.0-SNAPSHOT</version>
+    <version>10.3.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>runner-standalone-pages</artifactId>
