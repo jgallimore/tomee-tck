@@ -149,7 +149,9 @@ class SetupCommand
 
         // Backup the original sig-test_se8.map, load in the new props, and create
         // the modified file
-        def originalSe8File = createOriginalFile("${javaeeCtsHome}/bin/sig-test_se8.map.orig", "${javaeeCtsHome}/bin/sig-test_se8.map")
+        // EE 9.1 ships bin/sig-test_se8.map, EE 10 ships bin/sig-test.map
+        def sigMapName = new File("${javaeeCtsHome}/bin/sig-test_se8.map").exists() ? "sig-test_se8.map" : "sig-test.map"
+        def originalSe8File = createOriginalFile("${javaeeCtsHome}/bin/${sigMapName}.orig", "${javaeeCtsHome}/bin/${sigMapName}")
 
         // Load original properties
         def props = loadProps(originalSe8File)
@@ -161,7 +163,7 @@ class SetupCommand
         props.putAll(customProps)
 
         // Save the new properties file
-        storeProps(props, "${javaeeCtsHome}/bin/sig-test_se8.map")
+        storeProps(props, "${javaeeCtsHome}/bin/${sigMapName}")
     }
 
     def createOriginalFile(newFileName, oldFileName) {

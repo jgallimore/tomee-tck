@@ -39,10 +39,10 @@
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
 
-    <openejb.inzip.version>10.0.0-SNAPSHOT</openejb.inzip.version>
-    <tomee.inzip.version>10.0.0-SNAPSHOT</tomee.inzip.version>
+    <openejb.inzip.version>10.3.1-SNAPSHOT</openejb.inzip.version>
+    <tomee.inzip.version>10.3.1-SNAPSHOT</tomee.inzip.version>
     <tomee.zip.groupId>org.apache.tomee</tomee.zip.groupId>
-    <tomee.zip.version>10.0.0-SNAPSHOT</tomee.zip.version>
+    <tomee.zip.version>10.3.1-SNAPSHOT</tomee.zip.version>
 
     <!-- Settings to run against TomEE 9.0.0-M7 which passes all the Web Profile tests -->
 <!--    <openejb.inzip.version>8.0.7</openejb.inzip.version>-->
@@ -50,18 +50,18 @@
 <!--    <tomee.zip.groupId>org.apache.tomee</tomee.zip.groupId>-->
 <!--    <tomee.zip.version>9.0.0-M7</tomee.zip.version>-->
 
-    <tomcat.version>10.0.27</tomcat.version>
+    <tomcat.version>10.1.61</tomcat.version>
 
     <johnzon.version>1.2.19</johnzon.version>
     <derby.version>10.14.2.0</derby.version>
 
     <!--
     NOTE: User must define "javaee8.cts.home" and "javaee8.ri.home" in ~/.m2/settings.xml
-    NOTE: Same for the Jakarta version "jakartaee9.cts.home" and "jakartaee9.ri.home" in ~/.m2/settings.xml
+    NOTE: Same for the Jakarta version "jakartaee10.cts.home" and "jakartaee10.ri.home" in ~/.m2/settings.xml
     -->
-    <cts.home>${jakartaee9.cts.home}</cts.home>
-    <ri.home>${jakartaee9.ri.home}</ri.home>
-    <tck.version>9.0</tck.version>
+    <cts.home>${jakartaee10.cts.home}</cts.home>
+    <ri.home>${jakartaee10.ri.home}</ri.home>
+    <tck.version>10.0</tck.version>
 
     <localRepository>${settings.localRepository}</localRepository>
     <examples.version>1.1-SNAPSHOT</examples.version>
@@ -96,7 +96,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
-    <version.activemq>5.16.5</version.activemq>
+    <version.activemq>6.3.3</version.activemq>
     <version.gmaven-plugin>1.5</version.gmaven-plugin>
   </properties>
 
@@ -109,24 +109,23 @@
     <dependency>
       <groupId>jakarta.ejb</groupId>
       <artifactId>jakarta.ejb-api</artifactId>
-      <version>4.0.0</version>
+      <version>4.0.1</version>
     </dependency>
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
-      <version>5.0.0</version>
+      <version>6.0.0</version>
     </dependency>
     <dependency>
       <groupId>jakarta.transaction</groupId>
       <artifactId>jakarta.transaction-api</artifactId>
-      <version>2.0.0</version>
+      <version>2.0.1</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jms_1.1_spec</artifactId>
-      <version>1.1.1</version>
-      <scope>compile</scope>
+      <groupId>jakarta.jms</groupId>
+      <artifactId>jakarta.jms-api</artifactId>
+      <version>3.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>
@@ -142,8 +141,7 @@
     <dependency>
       <groupId>org.apache.geronimo.components</groupId>
       <artifactId>geronimo-connector</artifactId>
-      <version>3.1.5</version>
-      <classifier>jakarta</classifier>
+      <version>4.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>
@@ -189,13 +187,6 @@
       <version>${tck.version}</version>
       <scope>system</scope>
       <systemPath>${cts.home}/lib/tsharness.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.javaee.tck</groupId>
-      <artifactId>tssv</artifactId>
-      <version>${tck.version}</version>
-      <scope>system</scope>
-      <systemPath>${cts.home}/lib/tssv.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
@@ -294,7 +285,7 @@
     <dependency>
       <groupId>org.apache.geronimo.mail</groupId>
       <artifactId>geronimo-mail_2.1_provider</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.1</version>
     </dependency>
 
     <dependency>
@@ -728,10 +719,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.2</version>
+        <version>3.13.0</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <release>17</release>
         </configuration>
       </plugin>
 
@@ -848,7 +838,6 @@
             This basically adds into the lib directory for the client the necessary jars
             Do not add any TomEE, Tomcat jar because they have to come from the lib above.
             Otherwise, they won't be jakartized
-            ActiveMQ is a bit special because it's old and still requires Geronimo Spec for JMS 1.1 which is not Jakarta compliant
           -->
           <execution>
             <id>copy-dependencies</id>
@@ -861,7 +850,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>hawtbuf,geronimo-jms_1.1_spec,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient</includeArtifactIds>
+              <includeArtifactIds>hawtbuf,jakarta.jms-api,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient</includeArtifactIds>
             </configuration>
           </execution>
 
@@ -877,7 +866,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient</includeArtifactIds>
+              <includeArtifactIds>tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
@@ -919,6 +908,8 @@
                     <include name="jaxb-runtime*.jar"/>
                     <include name="jakarta.xml.bind-api*.jar"/>
                     <include name="jakarta.activation*.jar"/>
+                    <include name="angus-activation*.jar"/>
+                    <include name="jaxb-core*.jar"/>
                     <include name="txw2*.jar"/>
                     <include name="istack-commons*.jar"/>
                     <include name="stax-ex*.jar"/>
@@ -971,6 +962,7 @@
                     <include name="jaspic-api*.jar"/>
                     <include name="tomcat-api*.jar"/>
                     <include name="websocket-api*.jar"/>
+                    <include name="websocket-client-api*.jar"/>
                     <include name="jsp-api*.jar"/>
                     <include name="el-api*.jar"/>
                     <include name="servlet-api*.jar"/>

@@ -17,7 +17,8 @@
 -->
 <!-- The contents of this file will be loaded for each web application -->
 <Context crossContext="true" resourceOnlyServlets="jsp" jndiExceptionOnFailedWrite="false">
-  <CookieProcessor className="org.apache.tomcat.util.http.LegacyCookieProcessor" alwaysAddExpires="true" forwardSlashIsSeparator="false" />
+  <!-- LegacyCookieProcessor no longer exists in Tomcat 10.1.x; use the RFC 6265 processor (the Tomcat default) -->
+  <CookieProcessor className="org.apache.tomcat.util.http.Rfc6265CookieProcessor" />
   <!-- Default set of monitored resources. If one of these changes, the    -->
   <!-- web application will be reloaded.                                   -->
   <WatchedResource>WEB-INF/web.xml</WatchedResource>
