@@ -188,6 +188,14 @@
       <scope>system</scope>
       <systemPath>${cts.home}/lib/tsharness.jar</systemPath>
     </dependency>
+    <!-- javax.rmi, for PortableRemoteObjectDelegateImpl. The JDK dropped it in Java 11 -->
+    <dependency>
+      <groupId>org.glassfish.corba</groupId>
+      <artifactId>glassfish-corba-omgapi</artifactId>
+      <version>${tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${ri.home}/modules/glassfish-corba-omgapi.jar</systemPath>
+    </dependency>
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsprovider</artifactId>

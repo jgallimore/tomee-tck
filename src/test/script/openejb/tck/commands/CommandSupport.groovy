@@ -235,6 +235,10 @@ abstract class CommandSupport {
         builder.append("derby-*.jar")
         builder.append("derbyclient-*.jar")
         builder.append("openejb-client*.jar")
+        // javax.rmi.PortableRemoteObject for the TCK's TSNamingContext (ejb vehicle): the JDK
+        // dropped it in Java 11, and GlassFish provides it from its CORBA OMG API jar
+        builder.directory = "${javaeeRiHome}/modules"
+        builder.append("glassfish-corba-omgapi.jar")
         builder.directory = "${javaeetckHome}/lib"
         builder.append("javatest.jar")
         builder.append("tsharness.jar")
