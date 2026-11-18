@@ -924,6 +924,9 @@
                     <include name="FastInfoset*.jar"/>
                     <include name="openejb-jee-accessors*.jar"/>
                     <include name="sxc-shade*.jar"/>
+                    <!-- TomEE 10.3 ships SXC unshaded -->
+                    <include name="sxc-jaxb-core*.jar"/>
+                    <include name="sxc-runtime*.jar"/>
                     <include name="commons-cli*.jar"/>
                     <include name="commons-collections*.jar"/>
                     <include name="activemq-jdbc*.jar"/>
