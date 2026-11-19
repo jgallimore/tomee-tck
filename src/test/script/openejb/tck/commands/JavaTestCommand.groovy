@@ -240,12 +240,11 @@ class JavaTestCommand
 
                 def containerJavaOpts = get('container.java.opts', "")
 
-                // http://openjdk.java.net/jeps/252
-                // need to set back java locale to COMPAT,SPI for Java 9 and above
-                // tomcat requires add-opens to function properly as well
+                // tomcat requires add-opens to function properly on Java 9 and above.
+                // No java.locale.providers=COMPAT: the EE 10 golden files (JSTL fmt) expect the default
+                // CLDR formats (http://openjdk.java.net/jeps/252), and EE 8/9 ones expected COMPAT
                 def matches = containerJavaVersion ==~ /1[0-9]/;
                 if (matches || new File(containerJavaHome as String, 'jmods').exists()) {
-                    containerJavaOpts += " -Djava.locale.providers=COMPAT,SPI"
                     containerJavaOpts += " --add-opens=java.base/java.lang=ALL-UNNAMED"
                     containerJavaOpts += " --add-opens=java.base/java.io=ALL-UNNAMED"
                     containerJavaOpts += " --add-opens=java.base/java.util=ALL-UNNAMED"
