@@ -30,6 +30,12 @@
     <Manager pathname="" />
     -->
 
+    <!-- Tomcat's default manager. Session ids use SHA1PRNG (Tomcat's default), or the platform
+         default with -o fips, which is an approved DRBG in FIPS mode (SetupCommand) -->
+    <Manager>
+        <SessionIdGenerator secureRandomAlgorithm="%session.secureRandomAlgorithm%" />
+    </Manager>
+
     <Valve className="org.apache.openejb.cts.TransactionalWorkaroundLeakGuardValve"/>
 
     <Environment name="myUrl" value="http://google.com"

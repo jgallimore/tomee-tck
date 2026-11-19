@@ -35,6 +35,9 @@ import openejb.tck.util.OutputScanner
 class JavaTestCommand
     extends CommandSupport
 {
+    // Semeru's FIPS 140-3 mode, for -o fips
+    static final String FIPS_JAVA_OPTS = "-Dsemeru.fips=true -Dsemeru.customprofile=OpenJCEPlusFIPS.FIPS140-3"
+
     def JavaTestCommand(source) {
         super(source)
     }
@@ -162,6 +165,16 @@ class JavaTestCommand
             }
         }
         
+        // With -o fips, check that the server's JDK really runs in FIPS mode before running any test,
+        // so a JDK or option problem can't quietly turn a FIPS run into a normal one
+        if (options.contains('fips')) {
+            def fipsJavaHome = get('container.java.home') ?: javaHome
+            ant.exec(executable: "${fipsJavaHome}/bin/java", failonerror: true) {
+                FIPS_JAVA_OPTS.tokenize(' ').each { arg(value: it) }
+                arg(value: "${project.basedir}/src/test/fips/FipsCheck.java")
+            }
+        }
+
         // Track how long the run takes
         def watch = new StopWatch()
         watch.start()
@@ -289,7 +302,7 @@ class JavaTestCommand
 
                 if (options.contains('fips')) {
                     log.info("Running the server and the ejbembed vehicle in Semeru's FIPS 140-3 mode")
-                    def fipsOpts = " -Dsemeru.fips=true -Dsemeru.customprofile=OpenJCEPlusFIPS.FIPS140-3"
+                    def fipsOpts = " ${FIPS_JAVA_OPTS}"
                     containerJavaOpts += fipsOpts
                     embeddedJavaOpts += fipsOpts
                 }

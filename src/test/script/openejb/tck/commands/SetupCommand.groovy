@@ -268,11 +268,23 @@ class SetupCommand
         //
         // Copy openejb configuration files into server
         //
+        // With -o fips the server can't use JKS, or Tomcat's default SHA1PRNG for session ids
+        def fips = get('options', '').tokenize(',').contains('fips')
+        def keystores = fips ? "${project.basedir}/src/test/keystores/fips" : "${project.basedir}/src/test/keystores"
+        def serverKeystore = fips ? 'clientcert.p12' : 'clientcert.jks'
+        def serverTruststore = fips ? 'ssl-truststore.p12' : 'ssl-truststore'
+
         ant.copy(todir: "${openejbHome}", filtering: true, overwrite: true) {
 
             def map = [:]
             map.putAll(System.properties)
             map.putAll(project.properties)
+
+            map['server.keystore'] = serverKeystore
+            map['server.truststore'] = serverTruststore
+            map['server.keystore.type'] = fips ? 'PKCS12' : 'JKS'
+            // An empty algorithm means the platform default SecureRandom, which in FIPS mode is an approved DRBG
+            map['session.secureRandomAlgorithm'] = fips ? '' : 'SHA1PRNG'
 
             def wcFiles
 
@@ -311,14 +323,14 @@ class SetupCommand
         }
 
         //
-        // Copy the clientcert.jks keystore to the conf dir
+        // Copy the server's keystore and truststore to the conf dir: JKS, or PKCS12 with -o fips
         //
         ant.copy(
-            file: "${project.basedir}/src/test/keystores/clientcert.jks",
+            file: "${keystores}/${serverKeystore}",
             todir: "${openejbHome}/conf"
         )
         ant.copy(
-            file: "${project.basedir}/src/test/keystores/ssl-truststore",
+            file: "${keystores}/${serverTruststore}",
             todir: "${openejbHome}/conf"
         )
 		
