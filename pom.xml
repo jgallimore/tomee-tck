@@ -948,6 +948,8 @@
                     <include name="swizzle*.jar"/>
                     <include name="commons-logging*.jar"/>
                     <include name="quartz-openejb*.jar"/>
+                    <!-- TomEE 10.3 renamed the Quartz shade -->
+                    <include name="tomee-quartz-shade*.jar"/>
                     <include name="slf4j-api*.jar"/>
                     <include name="openwebbeans-impl*.jar"/>
                     <include name="openwebbeans-spi*.jar"/>
