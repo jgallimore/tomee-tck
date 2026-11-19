@@ -282,10 +282,27 @@ class JavaTestCommand
                             "-Dorg.apache.tomcat.websocket.ALLOW_UNSUPPORTED_EXTENSIONS=true " +
                             "-Dorg.apache.tomcat.websocket.DEFAULT_PROCESS_PERIOD=0"
                 }
+
+                // The ejbembed vehicle runs OpenEJB in a JVM of its own (command.testExecuteEjbEmbed in
+                // testsuite.properties). It's server code, so it runs on the container's JDK, in FIPS mode too
+                def embeddedJavaOpts = ""
+
+                if (options.contains('fips')) {
+                    log.info("Running the server and the ejbembed vehicle in Semeru's FIPS 140-3 mode")
+                    def fipsOpts = " -Dsemeru.fips=true -Dsemeru.customprofile=OpenJCEPlusFIPS.FIPS140-3"
+                    containerJavaOpts += fipsOpts
+                    embeddedJavaOpts += fipsOpts
+                }
+
                 if (containerJavaOpts != null) {
                     log.info("Using java opts (container) ${containerJavaOpts}")
                     jvmarg(value: "-Dcontainer.java.opts=${containerJavaOpts}")
                 }
+
+                log.info("Using java home (ejbembed) ${containerJavaHome}")
+                log.info("Using java opts (ejbembed) ${embeddedJavaOpts}")
+                sysproperty(key: "ejbembed.java.home", value: containerJavaHome)
+                sysproperty(key: "ejbembed.java.opts", value: embeddedJavaOpts)
 
                 /*
                 if (containerJavaOpts != null &&
