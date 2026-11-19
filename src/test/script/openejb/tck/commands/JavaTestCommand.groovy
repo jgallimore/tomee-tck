@@ -35,8 +35,9 @@ import openejb.tck.util.OutputScanner
 class JavaTestCommand
     extends CommandSupport
 {
-    // Semeru's FIPS 140-3 mode, for -o fips
-    static final String FIPS_JAVA_OPTS = "-Dsemeru.fips=true -Dsemeru.customprofile=OpenJCEPlusFIPS.FIPS140-3"
+    // Semeru's FIPS 140-3 mode, for -o fips. The strict OpenJCEPlusFIPS.FIPS140-3 profile has no KeyStore
+    // at all, so TomEE couldn't load its TLS keystore; Strongly-Enforced adds PKCS12 keystores
+    static final String FIPS_JAVA_OPTS = "-Dsemeru.fips=true -Dsemeru.customprofile=OpenJCEPlusFIPS.FIPS140-3-Strongly-Enforced"
 
     def JavaTestCommand(source) {
         super(source)
