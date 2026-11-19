@@ -263,7 +263,10 @@ class JavaTestCommand
 //                }
 
                 // force memory on tasks because with JDK 8 it's computed with a bit too much
-                // containerJavaOpts += " -Xmx512m -Dtest.ejb.stateful.timeout.wait.seconds=60"
+                // containerJavaOpts += " -Xmx512m"
+
+                // Same as stateful.timeout.wait.seconds in testsuite.properties, for the vehicles that run in the server
+                containerJavaOpts += " -Dtest.ejb.stateful.timeout.wait.seconds=120"
 
                 if (options.contains('security')) {
                     log.info("Enabling server security manager")
