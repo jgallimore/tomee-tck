@@ -313,23 +313,6 @@ class SetupCommand
         }
 
         //
-        // With -o fips, TomEE's default databases use the harness's Derby: HSQLDB, the default, needs MD5,
-        // which FIPS mode doesn't allow
-        //
-        if (fips) {
-            def derbyUrl = "jdbc:derby://localhost:${project.properties['derby.server.port']}/derbydb;create=true"
-            def overrides = new StringBuilder("\n# -o fips: TomEE's default databases on Derby, not HSQLDB\n")
-            ['Default JDBC Database', 'Default Unmanaged JDBC Database'].each { id ->
-                def key = id.replace(' ', '\\ ')
-                overrides << "${key}.JdbcDriver=org.apache.derby.jdbc.ClientDriver\n"
-                overrides << "${key}.JdbcUrl=${derbyUrl}\n"
-                overrides << "${key}.UserName=cts\n"
-                overrides << "${key}.Password=cts\n"
-            }
-            ant.echo(file: "${openejbHome}/conf/system.properties", append: true, message: overrides.toString())
-        }
-
-        //
         // Copy tomee-tck jar to server lib
         // this jar contains the DriverXADataSource needed for the xa tests
         //
