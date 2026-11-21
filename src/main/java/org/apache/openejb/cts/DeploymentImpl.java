@@ -74,6 +74,11 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
         }
 
         final RemoteServer remoteServer = new RemoteServer(overrides, 250, true);
+        // Jars for the server's system classpath, like the Bouncy Castle FIPS providers with -o bcfips
+        final String containerAdditionalClasspath = System.getProperty("container.additional.classpath");
+        if (containerAdditionalClasspath != null) {
+            remoteServer.setAdditionalClasspath(containerAdditionalClasspath);
+        }
         remoteServer.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {

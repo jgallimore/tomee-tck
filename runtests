@@ -271,6 +271,11 @@ if [ "x$options" != "x" ]; then
    appendArgs "-Doptions=$options"
 fi
 
+# -o bcfips needs the Bouncy Castle FIPS jars (the bcfips profile in pom.xml)
+case ",$options," in
+    *,bcfips,*) appendArgs "-Dbcfips=true" ;;
+esac
+
 # Make sure a test was selected
 if [ "x$tests" = "x" ]; then
     usage

@@ -39,6 +39,25 @@ class JavaTestCommand
     // at all, so TomEE couldn't load its TLS keystore; Strongly-Enforced adds PKCS12 keystores
     static final String FIPS_JAVA_OPTS = "-Dsemeru.fips=true -Dsemeru.customprofile=OpenJCEPlusFIPS.FIPS140-3-Strongly-Enforced"
 
+    // Bouncy Castle FIPS in approved-only mode, for -o bcfips, on any JDK: src/test/fips/bcfips.java.security
+    // replaces the JDK's providers. The default truststore is the server's, as BCFKS can't read the JDK's JKS cacerts
+    def bcFipsJavaOpts(openejbHome) {
+        return "-Dorg.bouncycastle.fips.approved_only=true " +
+                "-Djava.security.properties==${project.basedir}/src/test/fips/bcfips.java.security " +
+                "-Djavax.net.ssl.trustStore=${project.basedir}/${openejbHome}/conf/ssl-truststore.bcfks " +
+                "-Djavax.net.ssl.trustStoreType=BCFKS -Djavax.net.ssl.trustStorePassword=changeit"
+    }
+
+    // The Bouncy Castle FIPS jars (the bcfips profile in pom.xml). Providers configured in java.security are
+    // loaded by the system class loader, so they go on the server's and the ejbembed vehicle's classpath
+    def bcFipsClasspath() {
+        def jars = new File("${project.build.directory}/bcfips").listFiles()?.findAll { it.name.endsWith('.jar') }
+        if (!jars) {
+            throw new IllegalStateException("No Bouncy Castle FIPS jars in ${project.build.directory}/bcfips")
+        }
+        return jars.collect { it.absolutePath }.sort().join(File.pathSeparator)
+    }
+
     def JavaTestCommand(source) {
         super(source)
     }
@@ -166,13 +185,20 @@ class JavaTestCommand
             }
         }
         
-        // With -o fips, check that the server's JDK really runs in FIPS mode before running any test,
+        // With -o fips or -o bcfips, check that the server's JDK really runs in FIPS mode before running any test,
         // so a JDK or option problem can't quietly turn a FIPS run into a normal one
-        if (options.contains('fips')) {
+        if (options.contains('fips') || options.contains('bcfips')) {
             def fipsJavaHome = get('container.java.home') ?: javaHome
             ant.exec(executable: "${fipsJavaHome}/bin/java", failonerror: true) {
-                FIPS_JAVA_OPTS.tokenize(' ').each { arg(value: it) }
+                if (options.contains('bcfips')) {
+                    arg(value: "-cp")
+                    arg(value: bcFipsClasspath())
+                    bcFipsJavaOpts(openejbHome).tokenize(' ').each { arg(value: it) }
+                } else {
+                    FIPS_JAVA_OPTS.tokenize(' ').each { arg(value: it) }
+                }
                 arg(value: "${project.basedir}/src/test/fips/FipsCheck.java")
+                arg(value: options.contains('bcfips') ? 'bcfips' : 'semeru')
             }
         }
 
@@ -306,6 +332,16 @@ class JavaTestCommand
                     def fipsOpts = " ${FIPS_JAVA_OPTS}"
                     containerJavaOpts += fipsOpts
                     embeddedJavaOpts += fipsOpts
+                }
+
+                // The ejbembed vehicle gets the jars from openejb.embedded.classpath (CommandSupport), and the server
+                // from DeploymentImpl, which passes container.additional.classpath to RemoteServer
+                if (options.contains('bcfips')) {
+                    log.info("Running the server and the ejbembed vehicle with Bouncy Castle FIPS in approved-only mode")
+                    def bcOpts = " ${bcFipsJavaOpts(openejbHome)}"
+                    containerJavaOpts += bcOpts
+                    embeddedJavaOpts += bcOpts
+                    jvmarg(value: "-Dcontainer.additional.classpath=${bcFipsClasspath()}")
                 }
 
                 if (containerJavaOpts != null) {

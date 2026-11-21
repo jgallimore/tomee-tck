@@ -310,6 +310,11 @@ abstract class CommandSupport {
         if (get("webcontainer").equals("tomee-plume")) {
             builder.appendAll("eclipselink-*.jar")
         }
+        // -o bcfips: the ejbembed vehicle loads the Bouncy Castle FIPS providers from its system classpath
+        if (get('options', '').tokenize(',').contains('bcfips')) {
+            builder.directory = "${project.build.directory}/bcfips"
+            builder.appendAll("*.jar")
+        }
 
         builder.getPath("openejb.embedded.classpath")
     }

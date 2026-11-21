@@ -96,6 +96,11 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
+    <!-- Bouncy Castle FIPS for -o bcfips, as in TomEE's docs/fips-140-3.adoc -->
+    <version.bc-fips>2.1.2</version.bc-fips>
+    <version.bctls-fips>2.1.22</version.bctls-fips>
+    <version.bcutil-fips>2.1.5</version.bcutil-fips>
+    <version.bcpkix-fips>2.1.10</version.bcpkix-fips>
     <version.activemq>6.3.3</version.activemq>
     <version.gmaven-plugin>1.5</version.gmaven-plugin>
   </properties>
@@ -580,6 +585,69 @@
                   <source>
                     new openejb.tck.commands.ReverseSetupCommand(this).execute()
                   </source>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- ============================== -->
+    <!-- Bouncy Castle FIPS (-o bcfips) -->
+    <!-- ============================== -->
+
+    <!--
+    runtests sets bcfips=true with -o bcfips. The jars go to their own directory, not lib/: JavaTestCommand
+    puts them on the server's and the ejbembed vehicle's system classpath, where providers configured in
+    java.security are loaded from, and nowhere else
+    -->
+    <profile>
+      <id>bcfips</id>
+
+      <activation>
+        <property>
+          <name>bcfips</name>
+          <value>true</value>
+        </property>
+      </activation>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-bcfips</id>
+                <phase>process-test-resources</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/bcfips</outputDirectory>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.bouncycastle</groupId>
+                      <artifactId>bc-fips</artifactId>
+                      <version>${version.bc-fips}</version>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.bouncycastle</groupId>
+                      <artifactId>bctls-fips</artifactId>
+                      <version>${version.bctls-fips}</version>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.bouncycastle</groupId>
+                      <artifactId>bcutil-fips</artifactId>
+                      <version>${version.bcutil-fips}</version>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.bouncycastle</groupId>
+                      <artifactId>bcpkix-fips</artifactId>
+                      <version>${version.bcpkix-fips}</version>
+                    </artifactItem>
+                  </artifactItems>
                 </configuration>
               </execution>
             </executions>

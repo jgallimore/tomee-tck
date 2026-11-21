@@ -1,0 +1,35 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# java.security for -o bcfips, which replaces the JDK's (-Djava.security.properties==), as in "Bouncy Castle FIPS"
+# in TomEE's docs/fips-140-3.adoc. Bouncy Castle FIPS provides all cryptography and TLS; SUN stays as entropy
+# for the BCFIPS DRBG and for non cryptographic services (JAAS configuration, policy), and still serves non
+# approved algorithms requested by name (MD5, SHA1PRNG...).
+security.provider.1=org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider
+security.provider.2=org.bouncycastle.jsse.provider.BouncyCastleJsseProvider fips:BCFIPS
+security.provider.3=SUN
+
+# Not BCFIPS: its DRBG seeds itself from SecureRandom.getInstanceStrong(), which would recurse
+securerandom.source=file:/dev/random
+securerandom.strongAlgorithms=NativePRNGBlocking:SUN
+keystore.type=BCFKS
+ssl.KeyManagerFactory.algorithm=PKIX
+ssl.TrustManagerFactory.algorithm=PKIX
+login.configuration.provider=sun.security.provider.ConfigFile
+policy.provider=sun.security.provider.PolicyFile
+policy.url.1=file:${java.home}/conf/security/java.policy
+crypto.policy=unlimited

@@ -268,11 +268,15 @@ class SetupCommand
         //
         // Copy openejb configuration files into server
         //
-        // With -o fips the server can't use JKS, or Tomcat's default SHA1PRNG for session ids
-        def fips = get('options', '').tokenize(',').contains('fips')
-        def keystores = fips ? "${project.basedir}/src/test/keystores/fips" : "${project.basedir}/src/test/keystores"
-        def serverKeystore = fips ? 'clientcert.p12' : 'clientcert.jks'
-        def serverTruststore = fips ? 'ssl-truststore.p12' : 'ssl-truststore'
+        // With -o fips (Semeru) or -o bcfips (Bouncy Castle FIPS) the server can't use JKS, or Tomcat's default
+        // SHA1PRNG for session ids. Semeru's FIPS profile has PKCS12 keystores, Bouncy Castle FIPS has BCFKS
+        def options = get('options', '').tokenize(',')
+        def fips = options.contains('fips')
+        def bcFips = options.contains('bcfips')
+        def keystores = bcFips ? "${project.basedir}/src/test/keystores/bcfips" :
+                fips ? "${project.basedir}/src/test/keystores/fips" : "${project.basedir}/src/test/keystores"
+        def serverKeystore = bcFips ? 'clientcert.bcfks' : fips ? 'clientcert.p12' : 'clientcert.jks'
+        def serverTruststore = bcFips ? 'ssl-truststore.bcfks' : fips ? 'ssl-truststore.p12' : 'ssl-truststore'
 
         ant.copy(todir: "${openejbHome}", filtering: true, overwrite: true) {
 
@@ -282,9 +286,9 @@ class SetupCommand
 
             map['server.keystore'] = serverKeystore
             map['server.truststore'] = serverTruststore
-            map['server.keystore.type'] = fips ? 'PKCS12' : 'JKS'
+            map['server.keystore.type'] = bcFips ? 'BCFKS' : fips ? 'PKCS12' : 'JKS'
             // An empty algorithm means the platform default SecureRandom, which in FIPS mode is an approved DRBG
-            map['session.secureRandomAlgorithm'] = fips ? '' : 'SHA1PRNG'
+            map['session.secureRandomAlgorithm'] = (fips || bcFips) ? '' : 'SHA1PRNG'
 
             def wcFiles
 
@@ -323,7 +327,19 @@ class SetupCommand
         }
 
         //
-        // Copy the server's keystore and truststore to the conf dir: JKS, or PKCS12 with -o fips
+        // With -o bcfips, remove the non FIPS Bouncy Castle jars TomEE ships: they share packages with the
+        // Bouncy Castle FIPS jars JavaTestCommand puts on the system classpath
+        //
+        if (bcFips) {
+            ant.delete {
+                fileset(dir: "${openejbHome}/lib") {
+                    include(name: "bc*-jdk18on-*.jar")
+                }
+            }
+        }
+
+        //
+        // Copy the server's keystore and truststore to the conf dir: JKS, PKCS12 with -o fips, or BCFKS with -o bcfips
         //
         ant.copy(
             file: "${keystores}/${serverKeystore}",
